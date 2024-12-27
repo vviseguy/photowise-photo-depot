@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Manager</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+  </head>
+  <body>
+    <header>
+      <span id="checked-count">0 Selected</span>
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Search projects..." />
+        <button class="clear-btn" id="clear-btn">&times;</button>
+      </div>
+      <button id="archive" disabled>Archive</button>
+      <button id="share" disabled>Share</button>
+      <button id="download" disabled>Download</button>
+    </header>
+    <div class="project-list" id="project-list"></div>
+
+    <div class="pane-overlay" id="pane-overlay">
+      <div class="pane" id="pane">
+        <div class="photo-grid" id="photo-grid"></div>
+      </div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+  </body>
+</html>
