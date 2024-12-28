@@ -106,6 +106,10 @@ header button:disabled {
   opacity: 0;
 }
 
+.checked-count.hidden{
+  display: none;
+}
+
 .project:hover {
   background: var(--hover-color);
 }

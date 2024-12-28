@@ -47,6 +47,8 @@ function updateControls() {
   const count = checkedBoxes.length;
   checkedCount.textContent = `${count} Selected`;
   const enabled = count > 0;
+  
+  checkedCount.hidden = !enabled;
   archiveBtn.disabled = !enabled;
   shareBtn.disabled = !enabled;
   downloadBtn.disabled = !enabled;
