@@ -1,3 +1,5 @@
+// scripts/app.js
+
 const projects = [
   {
     id: 1,
