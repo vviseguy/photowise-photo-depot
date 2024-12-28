@@ -27,6 +27,7 @@
       </div>
     </div>
 
-    <script src="scripts/app.js"></script>
+    <!-- Ensure app.js runs within the module context -->
+    <script type="module">import './scripts/app.js';</script>
   </body>
 </html>

@@ -1,64 +1,22 @@
-// scripts/app.js
-
-const projects = [
-  {
-    id: 1,
-    title: "Project Alpha",
-    size: "20 MB",
-    files: 10,
-    lastAccessed: "2024-12-20",
-  },
-  {
-    id: 2,
-    title: "Project Beta",
-    size: "15 MB",
-    files: 8,
-    lastAccessed: "2024-12-18",
-  },
-  {
-    id: 3,
-    title: "Project Gamma",
-    size: "50 MB",
-    files: 25,
-    lastAccessed: "2024-12-15",
-  },
-];
-
-const dummyPhotos = Array.from(
-  { length: 20 },
-  (_, i) => `https://picsum.photos/150?random=${i}`
-);
+// File: app.js
+import {
+  redirectToLogin,
+  handleAuthRedirect,
+  userAuthenticated,
+} from "./auth.js";
+import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
 
 const projectList = document.getElementById("project-list");
 const archiveBtn = document.getElementById("archive");
 const shareBtn = document.getElementById("share");
 const downloadBtn = document.getElementById("download");
-const checkedCount = document.getElementById("checked-count");
 const searchInput = document.getElementById("search");
 const clearBtn = document.getElementById("clear-btn");
-const paneOverlay = document.getElementById("pane-overlay");
-const photoGrid = document.getElementById("photo-grid");
 
 let isSelectable = false;
 let canAClickEventOpenAProjectPane = true;
 
-function updateControls() {
-  const checkedBoxes = document.querySelectorAll(
-    '.project input[type="checkbox"]:checked'
-  );
-  const count = checkedBoxes.length;
-  checkedCount.textContent = `${count} Selected`;
-  const enabled = count > 0;
-  
-  checkedCount.hidden = !enabled;
-  archiveBtn.disabled = !enabled;
-  shareBtn.disabled = !enabled;
-  downloadBtn.disabled = !enabled;
 
-  if (count === 0) {
-    hideSelectableMode();
-  }
-}
 
 function enableSelectableMode() {
   if (!isSelectable) {
@@ -90,8 +48,22 @@ function handleSearch() {
   clearBtn.style.display = searchInput.value ? "block" : "none";
 }
 
-function renderProjects() {
+async function renderProjects() {
+
+  if (!userAuthenticated) {
+    projectList.innerHTML =
+      "<p>Please <a href='#' id='login-link'>log in</a> to view projects.</p>";
+
+    document.getElementById("login-link").addEventListener("click", (e) => {
+      e.preventDefault();
+      redirectToLogin();
+    });
+    return;
+  }
+
   projectList.innerHTML = "";
+
+  const projects = await fetchMetadata();
   projects.forEach((project) => {
     const projectDiv = document.createElement("div");
     projectDiv.className = "project";
@@ -102,14 +74,9 @@ function renderProjects() {
     checkbox.dataset.id = project.id;
     checkbox.addEventListener("change", updateControls);
 
-
     const checkboxContainer = document.createElement("label");
     checkboxContainer.setAttribute("for", `checkbox-${project.id}`);
-    // checkboxContainer.style.display = "block";
-    // checkboxContainer.style.height = "100%";
-    // checkboxContainer.style.width = "100%";
     checkboxContainer.className = "checkbox-container";
-
     checkboxContainer.appendChild(checkbox);
 
     const details = document.createElement("div");
@@ -147,7 +114,6 @@ function renderProjects() {
     buttonsDiv.appendChild(downloadBtn);
     details.appendChild(title);
     details.appendChild(meta);
-
     projectDiv.appendChild(checkboxContainer);
     projectDiv.appendChild(details);
     projectDiv.appendChild(buttonsDiv);
@@ -160,12 +126,12 @@ function renderProjects() {
         canAClickEventOpenAProjectPane = false;
       }, 500);
 
-      projectDiv.addEventListener("mouseup", () => {
+      projectDiv.addEventListener(
+        "mouseup",
+        () => {
           clearTimeout(timer);
         },
-        {
-          once: true,
-        }
+        { once: true }
       );
     });
 
@@ -174,29 +140,33 @@ function renderProjects() {
         openProjectPane(project);
       }
       canAClickEventOpenAProjectPane = true;
+
     });
 
     projectList.appendChild(projectDiv);
   });
 }
 
-function openProjectPane(project) {
+async function openProjectPane(project) {
+  const paneOverlay = document.getElementById("pane-overlay");
+  const photoGrid = document.getElementById("photo-grid");
+
   paneOverlay.style.display = "flex";
   photoGrid.innerHTML = "";
 
   const infoDiv = document.createElement("div");
-  infoDiv.style.marginBottom = "20px";
   infoDiv.innerHTML = `
-            <h2>${project.title}</h2>
-            <p>Size: ${project.size} | Files: ${project.files}</p>
-            <p>Likes: <span id="likes-count">0</span> | Dislikes: <span id="dislikes-count">0</span></p>
-        `;
+    <h2>${project.title}</h2>
+    <p>Size: ${project.size} | Files: ${project.files}</p>
+    <p>Likes: <span id="likes-count">0</span> | Dislikes: <span id="dislikes-count">0</span></p>
+  `;
   photoGrid.appendChild(infoDiv);
 
+  const photos = await fetchLowQualityImages(project.id);
   let likes = 0;
   let dislikes = 0;
 
-  dummyPhotos.forEach((photo) => {
+  photos.forEach((photo) => {
     const photoDiv = document.createElement("div");
     photoDiv.className = "photo";
 
@@ -209,6 +179,7 @@ function openProjectPane(project) {
 
     const thumbsUpBtn = document.createElement("button");
     thumbsUpBtn.textContent = "👍";
+
     const thumbsDownBtn = document.createElement("button");
     thumbsDownBtn.textContent = "👎";
 
@@ -249,9 +220,29 @@ function openProjectPane(project) {
   }
 }
 
-paneOverlay.addEventListener("click", (e) => {
-  if (e.target === paneOverlay) {
-    paneOverlay.style.display = "none";
+function updateControls() {
+  const checkedBoxes = document.querySelectorAll(
+    '.project input[type="checkbox"]:checked'
+  );
+  const count = checkedBoxes.length;
+  document.getElementById("checked-count").textContent = `${count} Selected`;
+  const enabled = count > 0;
+
+  document.getElementById("checked-count").hidden = !enabled;
+  document.getElementById("archive").disabled = !enabled;
+  document.getElementById("share").disabled = !enabled;
+  document.getElementById("download").disabled = !enabled;
+
+  if (count === 0) {
+    hideSelectableMode();
+  }
+}
+
+handleAuthRedirect();
+
+document.getElementById("pane-overlay").addEventListener("click", (e) => {
+  if (e.target.id === "pane-overlay") {
+    e.target.style.display = "none";
   }
 });
 
