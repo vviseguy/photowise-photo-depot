@@ -6,7 +6,10 @@ function redirectToLogin() {
 
 //   if (window.top == window.self) {
     // If embedded in an iframe, open login in a new tab
+    console.log("1")
     const newTab = window.open(loginUrl, "_blank");
+    
+    console.log("2")
     if (!newTab) {
       alert("Please enable popups to log in.");
     }
@@ -25,9 +28,9 @@ function handleAuthRedirect() {
     console.log("Authentication code stored:", authCode);
 
     // Clean the URL
-    const url = new URL(window.location.href);
-    url.searchParams.delete("code");
-    window.history.replaceState({}, document.title, url.pathname);
+    // const url = new URL(window.location.href);
+    // url.searchParams.delete("code");
+    // window.history.replaceState({}, document.title, url.pathname);
 
     // Auto-close the page if in a new tab or iframe
     // if (window.top == window.self) {
