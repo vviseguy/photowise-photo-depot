@@ -10,7 +10,6 @@ function redirectToLogin() {
     currentUrl
   )}&response_type=code&scope=email+openid+phone`;
   console.log(loginUrl);
-
   window.location.href = loginUrl;
 }
 
