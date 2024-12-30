@@ -2,9 +2,7 @@
 import {
   redirectToLogin,
   handleAuthRedirect,
-  checkStorageForAuth,
   userAuthenticated,
-  reloadOnAuthChange,
 } from "./auth.js";
 import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
 
@@ -18,11 +16,7 @@ const clearBtn = document.getElementById("clear-btn");
 let isSelectable = false;
 let canAClickEventOpenAProjectPane = true;
 
-// Listen for changes in storage to reload when authenticated
-reloadOnAuthChange();
 
-// Check storage for authentication on load
-checkStorageForAuth();
 
 function enableSelectableMode() {
   if (!isSelectable) {
