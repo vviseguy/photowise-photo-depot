@@ -1,10 +1,11 @@
 // File: app.js
+
+import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
 import {
   redirectToLogin,
   handleAuthRedirect,
   userAuthenticated,
 } from "./auth.js";
-import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
 
 const projectList = document.getElementById("project-list");
 const archiveBtn = document.getElementById("archive");
@@ -15,8 +16,6 @@ const clearBtn = document.getElementById("clear-btn");
 
 let isSelectable = false;
 let canAClickEventOpenAProjectPane = true;
-
-
 
 function enableSelectableMode() {
   if (!isSelectable) {
@@ -49,7 +48,6 @@ function handleSearch() {
 }
 
 async function renderProjects() {
-
   if (!userAuthenticated) {
     projectList.innerHTML =
       "<p>Please <a href='#' id='login-link'>log in</a> to view projects.</p>";
@@ -88,8 +86,15 @@ async function renderProjects() {
 
     const meta = document.createElement("div");
     meta.className = "project-meta";
-    meta.textContent = `Size: ${project.size} | Files: ${project.files} | Last Accessed: ${project.lastAccessed}`;
-
+    const metadata = {
+      Size: project.size,
+      Files: project.fileCount,
+      "Last Updated": project.lastModified,
+    };
+    meta.textContent = Object.entries(metadata)
+      .filter(([key, value]) => !!value)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(" | ");
     const buttonsDiv = document.createElement("div");
     buttonsDiv.className = "project-buttons";
 
@@ -140,7 +145,6 @@ async function renderProjects() {
         openProjectPane(project);
       }
       canAClickEventOpenAProjectPane = true;
-
     });
 
     projectList.appendChild(projectDiv);
@@ -157,7 +161,7 @@ async function openProjectPane(project) {
   const infoDiv = document.createElement("div");
   infoDiv.innerHTML = `
     <h2>${project.title}</h2>
-    <p>Size: ${project.size} | Files: ${project.files}</p>
+    <p>Size: ${project.size} | Files: ${project.fileCount}</p>
     <p>Likes: <span id="likes-count">0</span> | Dislikes: <span id="dislikes-count">0</span></p>
   `;
   photoGrid.appendChild(infoDiv);
@@ -238,7 +242,7 @@ function updateControls() {
   }
 }
 
-handleAuthRedirect();
+await handleAuthRedirect();
 
 document.getElementById("pane-overlay").addEventListener("click", (e) => {
   if (e.target.id === "pane-overlay") {
