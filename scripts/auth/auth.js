@@ -1,6 +1,18 @@
-// auth.js
+// auth/auth.js
+import { getToken, saveToken, startTokenRenewalCheck, initializeToken } from "./tokenManager";
+
+export function initAuthentication(){
+  handleAuthRedirect()
+
+  initializeToken()
+  startTokenRenewalCheck()
+}
+
+export function needLogin(){
+  return !!getToken()
+}
+
 let userAuthenticated = false;
-let accessToken = null;
 
 function redirectToLogin() {
   const currentUrl = window.location.href.split("?")[0];
@@ -16,8 +28,8 @@ function handleAuthRedirect() {
   const params = new URLSearchParams(window.location.hash.substring(1)); // Use hash instead of search for tokens
 
   if (params.has("access_token")) {
-    accessToken = params.get("access_token");
-    console.log("Access token:", accessToken);
+    saveToken(params.get("access_token"));
+    console.log("Access token:", getToken());
     userAuthenticated = true;
     removeTokenFromUrl();
   }
@@ -30,4 +42,11 @@ function removeTokenFromUrl() {
   window.history.replaceState({}, document.title, newUrl);
 }
 
-export { redirectToLogin, handleAuthRedirect, userAuthenticated, accessToken };
+function isAdmin() {
+  const accessToken = getToken()
+  if (!accessToken) return false;
+  const decoded = decodeJWT(accessToken);
+  return decoded["cognito:groups"]?.includes("admin");
+}
+
+export { redirectToLogin, handleAuthRedirect, userAuthenticated, isAdmin };

@@ -1,4 +1,7 @@
-import { accessToken } from "./auth.js";
+// projectData.js
+
+
+import { accessToken } from "./auth/auth.js";
 
 const dummyData = {
   metadata: [

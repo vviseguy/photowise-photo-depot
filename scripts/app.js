@@ -1,11 +1,11 @@
-// File: app.js
+// app.js
 
 import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
 import {
   redirectToLogin,
-  handleAuthRedirect,
   userAuthenticated,
-} from "./auth.js";
+  isAdmin
+} from "./auth/auth.js";
 
 const projectList = document.getElementById("project-list");
 const archiveBtn = document.getElementById("archive");
@@ -16,6 +16,76 @@ const clearBtn = document.getElementById("clear-btn");
 
 let isSelectable = false;
 let canAClickEventOpenAProjectPane = true;
+
+function initializeUI() {
+  initAuthentication()
+  
+  if (isAdmin()) {
+    const createBtn = document.createElement("button");
+    createBtn.textContent = "Create Project";
+    createBtn.id = "create-project";
+    document.querySelector("header").appendChild(createBtn);
+
+    createBtn.addEventListener("click", () => {
+      document.getElementById("pane-overlay").style.display = "flex";
+      openCreateProjectPane();
+    });
+  }
+
+  const addBtn = document.createElement("button");
+  addBtn.textContent = "Add Project";
+  addBtn.id = "add-project";
+  document.querySelector("header").appendChild(addBtn);
+
+  addBtn.addEventListener("click", () => {
+    const projectKey = prompt("Enter the project key to add:");
+    if (projectKey) shareProject(projectKey);
+  });
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const shareCodes = urlParams.getAll("share");
+  shareCodes.forEach((code) => shareProject(code));
+}
+
+function openCreateProjectPane() {
+  const pane = document.getElementById("pane");
+  pane.innerHTML = `
+    <h2>Create New Project</h2>
+    <form id="create-form">
+      <label>Project Name: <input type="text" id="project-name" required /></label>
+      <label>Description: <textarea id="project-desc"></textarea></label>
+      <button type="submit">Create</button>
+    </form>
+  `;
+  pane.querySelector("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("project-name").value;
+    const desc = document.getElementById("project-desc").value;
+    // Call server function to create the project
+    alert(`Created project: ${name}`);
+  });
+}
+
+async function shareProject(shareCode) {
+  // Server call to share the project using `shareCode`
+  alert(`Shared project with code: ${shareCode}`);
+}
+
+function updateShareButton(project) {
+  const shareCode = project.shareCode;
+  const shareUrl = `${window.location.origin}?share=${encodeURIComponent(shareCode)}`;
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    showToast(`Copied to clipboard: ${shareUrl}`);
+  });
+}
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.className = "toast";
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
 
 function enableSelectableMode() {
   if (!isSelectable) {
@@ -242,7 +312,7 @@ function updateControls() {
   }
 }
 
-await handleAuthRedirect();
+initializeUI();
 
 document.getElementById("pane-overlay").addEventListener("click", (e) => {
   if (e.target.id === "pane-overlay") {
