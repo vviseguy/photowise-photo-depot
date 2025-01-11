@@ -1,17 +1,12 @@
 import React from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-// import Login from "./routes/Login";
-// import Dashboard from "./routes/Dashboard";
-// import ProtectedRoute from "./routes/ProtectedRoute";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Header from "./components/Header";
-// import Dashboard from "./routes/Dashboard";
 import LoginComplaint from "./routes/LoginComplaint";
 import "./App.css"
 import Footer from "./components/Footer";
 import { PaneDisplay } from "./components/projects/PaneDisplay";
 import { ProjectList } from "./pages/ProjectList";
-import { SearchProvider } from "./context/SearchContext";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 const App: React.FC = () => {
