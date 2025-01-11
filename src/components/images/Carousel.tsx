@@ -9,7 +9,7 @@ const Carousel: React.FC<CarouselProps> = ({ imageUrls }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalSlides = imageUrls.length;
   const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
-  const carouselRef = useRef<HTMLUListElement | null>(null);
+  // const carouselRef = useRef<HTMLUListElement | null>(null);
 
   const goToSlide = (index: number) => {
     const newIndex = (index + totalSlides) % totalSlides;

@@ -38,6 +38,7 @@ const generateRandomFrame = (remainingWidth: number): ImageFrame => {
 
 // Heuristic function placeholder
 const heuristicScore = (placement: ImageFrame, gridWidth: number) => {
+  console.log(placement, gridWidth)
   return Math.random(); // Placeholder for more complex scoring
 };
 

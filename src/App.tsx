@@ -52,50 +52,50 @@ const App: React.FC = () => {
 };
 
 
-const AuthenticatedRoutes = () => (
-  <Routes>
-    <Route element={<div>hi</div>}>
-      <Route index element={<Navigate to="/feed" />} />
-      <Route
-        path="feed"
-        element={
-          <div>hi</div>
-        }
-      />
-      <Route
-        path="story"
-        element={
-          <div>hi</div>
-        }
-      />
-      <Route
-        path="following"
-        element={
-          <div>hi</div>
-        }
-      />
-      <Route
-        path="followers"
-        element={
-          <div>hi</div>
-        }
-      />
-      <Route path="logout" element={<Navigate to="/login" />} />
-      <Route path="*" element={<Navigate to="/feed" />} />
-    </Route>
-  </Routes>
-);
+// const AuthenticatedRoutes = () => (
+//   <Routes>
+//     <Route element={<div>hi</div>}>
+//       <Route index element={<Navigate to="/feed" />} />
+//       <Route
+//         path="feed"
+//         element={
+//           <div>hi</div>
+//         }
+//       />
+//       <Route
+//         path="story"
+//         element={
+//           <div>hi</div>
+//         }
+//       />
+//       <Route
+//         path="following"
+//         element={
+//           <div>hi</div>
+//         }
+//       />
+//       <Route
+//         path="followers"
+//         element={
+//           <div>hi</div>
+//         }
+//       />
+//       <Route path="logout" element={<Navigate to="/login" />} />
+//       <Route path="*" element={<Navigate to="/feed" />} />
+//     </Route>
+//   </Routes>
+// );
 
-const UnauthenticatedRoutes = () => {
+// const UnauthenticatedRoutes = () => {
 
-  return (
-    <Routes>
-      <Route path="/login" element={<div>hi</div>} />
-      <Route path="/register" element={<div>hi</div>} />
-      <Route path="*" element={<div>hi</div>} />
-    </Routes>
-  );
-};
+//   return (
+//     <Routes>
+//       <Route path="/login" element={<div>hi</div>} />
+//       <Route path="/register" element={<div>hi</div>} />
+//       <Route path="*" element={<div>hi</div>} />
+//     </Routes>
+//   );
+// };
 
 
 export default App;

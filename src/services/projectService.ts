@@ -38,19 +38,19 @@ class ProjectService {
     }
 
 
-    /**
-     * Converts raw dummy metadata to ProjectMetadata format.
-     */
-    private convertDummyData(): Project[] {
-        return this.dummyData.metadata.map((item, index) => ({
-            id: String(index),
-            title: item.title,
-            size: item.size,
-            files: item.files,
-            shootDate: new Date().toISOString(), // Placeholder logic
-            lastModified: new Date(item.lastAccessed).toISOString(),
-        }));
-    }
+    // /**
+    //  * Converts raw dummy metadata to ProjectMetadata format.
+    //  */
+    // private convertDummyData(): Project[] {
+    //     return this.dummyData.metadata.map((item, index) => ({
+    //         id: String(index),
+    //         title: item.title,
+    //         size: item.size,
+    //         files: item.files,
+    //         shootDate: new Date().toISOString(), // Placeholder logic
+    //         lastModified: new Date(item.lastAccessed).toISOString(),
+    //     }));
+    // }
 
     /**
      * Fetches project metadata, utilizing cache if available.

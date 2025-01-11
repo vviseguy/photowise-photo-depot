@@ -4,7 +4,6 @@ import { ProjectItem } from '../components/projects/ProjectItem';
 import { SlideDownBar } from '../components/projects/SlideDownBar';
 import { Project } from '../types/types';
 import { useSearch } from '../context/SearchContext';
-import ProjectService from '../services/projectService';
 import { useAuth } from '../context/AuthContext';
 
 export const ProjectList: React.FC = () => {

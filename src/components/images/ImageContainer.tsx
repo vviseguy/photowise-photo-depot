@@ -17,7 +17,7 @@ const ImageContainer: React.FC<ImageData> = ({ imageUrl, color, description }) =
         overflow: 'hidden',
         width:'fit-content',
         margin:'auto',
-        backgroundColor: 'red',
+        backgroundColor: color,
       }}
     >
       {imageUrl && (

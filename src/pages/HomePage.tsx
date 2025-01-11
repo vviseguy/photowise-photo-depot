@@ -1,7 +1,7 @@
 import React from 'react';
-import Grid from '../components/images/ImageGrid';
+// import Grid from '../components/images/ImageGrid';
 import Carousel from '../components/images/Carousel';
-import ImageContainer from '../components/images/ImageContainer';
+// import ImageContainer from '../components/images/ImageContainer';
 
 const images = Array.from({ length: 10 }, (_, index) => `https://picsum.photos/500?project=2&random=${index}`);
 
