@@ -1,335 +1,335 @@
-// app.js
+// // app.js
 
-import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
-import {
-  redirectToLogin,
-  userAuthenticated,
-  isAdmin
-} from "./auth/auth.js";
+// import { fetchMetadata, fetchLowQualityImages } from "./projectData.js";
+// import {
+//   redirectToLogin,
+//   userAuthenticated,
+//   isAdmin
+// } from "./auth/auth.js";
 
-const projectList = document.getElementById("project-list");
-const archiveBtn = document.getElementById("archive");
-const shareBtn = document.getElementById("share");
-const downloadBtn = document.getElementById("download");
-const searchInput = document.getElementById("search");
-const clearBtn = document.getElementById("clear-btn");
+// const projectList = document.getElementById("project-list");
+// const archiveBtn = document.getElementById("archive");
+// const shareBtn = document.getElementById("share");
+// const downloadBtn = document.getElementById("download");
+// const searchInput = document.getElementById("search");
+// const clearBtn = document.getElementById("clear-btn");
 
-let isSelectable = false;
-let canAClickEventOpenAProjectPane = true;
+// let isSelectable = false;
+// let canAClickEventOpenAProjectPane = true;
 
-function initializeUI() {
-  initAuthentication()
+// function initializeUI() {
+//   initAuthentication()
   
-  if (isAdmin()) {
-    const createBtn = document.createElement("button");
-    createBtn.textContent = "Create Project";
-    createBtn.id = "create-project";
-    document.querySelector("header").appendChild(createBtn);
+//   if (isAdmin()) {
+//     const createBtn = document.createElement("button");
+//     createBtn.textContent = "Create Project";
+//     createBtn.id = "create-project";
+//     document.querySelector("header").appendChild(createBtn);
 
-    createBtn.addEventListener("click", () => {
-      document.getElementById("pane-overlay").style.display = "flex";
-      openCreateProjectPane();
-    });
-  }
+//     createBtn.addEventListener("click", () => {
+//       document.getElementById("pane-overlay").style.display = "flex";
+//       openCreateProjectPane();
+//     });
+//   }
 
-  const addBtn = document.createElement("button");
-  addBtn.textContent = "Add Project";
-  addBtn.id = "add-project";
-  document.querySelector("header").appendChild(addBtn);
+//   const addBtn = document.createElement("button");
+//   addBtn.textContent = "Add Project";
+//   addBtn.id = "add-project";
+//   document.querySelector("header").appendChild(addBtn);
 
-  addBtn.addEventListener("click", () => {
-    const projectKey = prompt("Enter the project key to add:");
-    if (projectKey) shareProject(projectKey);
-  });
+//   addBtn.addEventListener("click", () => {
+//     const projectKey = prompt("Enter the project key to add:");
+//     if (projectKey) shareProject(projectKey);
+//   });
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const shareCodes = urlParams.getAll("share");
-  shareCodes.forEach((code) => shareProject(code));
-}
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const shareCodes = urlParams.getAll("share");
+//   shareCodes.forEach((code) => shareProject(code));
+// }
 
-function openCreateProjectPane() {
-  const pane = document.getElementById("pane");
-  pane.innerHTML = `
-    <h2>Create New Project</h2>
-    <form id="create-form">
-      <label>Project Name: <input type="text" id="project-name" required /></label>
-      <label>Description: <textarea id="project-desc"></textarea></label>
-      <button type="submit">Create</button>
-    </form>
-  `;
-  pane.querySelector("form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("project-name").value;
-    const desc = document.getElementById("project-desc").value;
-    // Call server function to create the project
-    alert(`Created project: ${name}`);
-  });
-}
+// function openCreateProjectPane() {
+//   const pane = document.getElementById("pane");
+//   pane.innerHTML = `
+//     <h2>Create New Project</h2>
+//     <form id="create-form">
+//       <label>Project Name: <input type="text" id="project-name" required /></label>
+//       <label>Description: <textarea id="project-desc"></textarea></label>
+//       <button type="submit">Create</button>
+//     </form>
+//   `;
+//   pane.querySelector("form").addEventListener("submit", (e) => {
+//     e.preventDefault();
+//     const name = document.getElementById("project-name").value;
+//     const desc = document.getElementById("project-desc").value;
+//     // Call server function to create the project
+//     alert(`Created project: ${name}`);
+//   });
+// }
 
-async function shareProject(shareCode) {
-  // Server call to share the project using `shareCode`
-  alert(`Shared project with code: ${shareCode}`);
-}
+// async function shareProject(shareCode) {
+//   // Server call to share the project using `shareCode`
+//   alert(`Shared project with code: ${shareCode}`);
+// }
 
-function updateShareButton(project) {
-  const shareCode = project.shareCode;
-  const shareUrl = `${window.location.origin}?share=${encodeURIComponent(shareCode)}`;
-  navigator.clipboard.writeText(shareUrl).then(() => {
-    showToast(`Copied to clipboard: ${shareUrl}`);
-  });
-}
+// function updateShareButton(project) {
+//   const shareCode = project.shareCode;
+//   const shareUrl = `${window.location.origin}?share=${encodeURIComponent(shareCode)}`;
+//   navigator.clipboard.writeText(shareUrl).then(() => {
+//     showToast(`Copied to clipboard: ${shareUrl}`);
+//   });
+// }
 
-function showToast(message) {
-  const toast = document.createElement("div");
-  toast.textContent = message;
-  toast.className = "toast";
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
+// function showToast(message) {
+//   const toast = document.createElement("div");
+//   toast.textContent = message;
+//   toast.className = "toast";
+//   document.body.appendChild(toast);
+//   setTimeout(() => toast.remove(), 3000);
+// }
 
-function enableSelectableMode() {
-  if (!isSelectable) {
-    isSelectable = true;
-    document.querySelectorAll(".project").forEach((project) => {
-      project.classList.add("selectable");
-    });
-  }
-}
+// function enableSelectableMode() {
+//   if (!isSelectable) {
+//     isSelectable = true;
+//     document.querySelectorAll(".project").forEach((project) => {
+//       project.classList.add("selectable");
+//     });
+//   }
+// }
 
-function hideSelectableMode() {
-  isSelectable = false;
-  document.querySelectorAll(".project").forEach((project) => {
-    project.classList.remove("selectable");
-    const checkbox = project.querySelector('input[type="checkbox"]');
-    checkbox.checked = false;
-  });
-  updateControls();
-}
+// function hideSelectableMode() {
+//   isSelectable = false;
+//   document.querySelectorAll(".project").forEach((project) => {
+//     project.classList.remove("selectable");
+//     const checkbox = project.querySelector('input[type="checkbox"]');
+//     checkbox.checked = false;
+//   });
+//   updateControls();
+// }
 
-function handleSearch() {
-  const filter = searchInput.value.toLowerCase();
-  document.querySelectorAll(".project").forEach((project) => {
-    const title = project
-      .querySelector(".project-title")
-      .textContent.toLowerCase();
-    project.classList.toggle("hidden", !title.includes(filter));
-  });
-  clearBtn.style.display = searchInput.value ? "block" : "none";
-}
+// function handleSearch() {
+//   const filter = searchInput.value.toLowerCase();
+//   document.querySelectorAll(".project").forEach((project) => {
+//     const title = project
+//       .querySelector(".project-title")
+//       .textContent.toLowerCase();
+//     project.classList.toggle("hidden", !title.includes(filter));
+//   });
+//   clearBtn.style.display = searchInput.value ? "block" : "none";
+// }
 
-async function renderProjects() {
-  if (!userAuthenticated) {
-    projectList.innerHTML =
-      "<p>Please <a href='#' id='login-link'>log in</a> to view projects.</p>";
+// async function renderProjects() {
+//   if (!userAuthenticated) {
+//     projectList.innerHTML =
+//       "<p>Please <a href='#' id='login-link'>log in</a> to view projects.</p>";
 
-    document.getElementById("login-link").addEventListener("click", (e) => {
-      e.preventDefault();
-      redirectToLogin();
-    });
-    return;
-  }
+//     document.getElementById("login-link").addEventListener("click", (e) => {
+//       e.preventDefault();
+//       redirectToLogin();
+//     });
+//     return;
+//   }
 
-  projectList.innerHTML = "";
+//   projectList.innerHTML = "";
 
-  const projects = await fetchMetadata();
-  projects.forEach((project) => {
-    const projectDiv = document.createElement("div");
-    projectDiv.className = "project";
+//   const projects = await fetchMetadata();
+//   projects.forEach((project) => {
+//     const projectDiv = document.createElement("div");
+//     projectDiv.className = "project";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.id = `checkbox-${project.id}`;
-    checkbox.dataset.id = project.id;
-    checkbox.addEventListener("change", updateControls);
+//     const checkbox = document.createElement("input");
+//     checkbox.type = "checkbox";
+//     checkbox.id = `checkbox-${project.id}`;
+//     checkbox.dataset.id = project.id;
+//     checkbox.addEventListener("change", updateControls);
 
-    const checkboxContainer = document.createElement("label");
-    checkboxContainer.setAttribute("for", `checkbox-${project.id}`);
-    checkboxContainer.className = "checkbox-container";
-    checkboxContainer.appendChild(checkbox);
+//     const checkboxContainer = document.createElement("label");
+//     checkboxContainer.setAttribute("for", `checkbox-${project.id}`);
+//     checkboxContainer.className = "checkbox-container";
+//     checkboxContainer.appendChild(checkbox);
 
-    const details = document.createElement("div");
-    details.className = "project-details";
+//     const details = document.createElement("div");
+//     details.className = "project-details";
 
-    const title = document.createElement("div");
-    title.className = "project-title";
-    title.textContent = project.title;
+//     const title = document.createElement("div");
+//     title.className = "project-title";
+//     title.textContent = project.title;
 
-    const meta = document.createElement("div");
-    meta.className = "project-meta";
-    const metadata = {
-      Size: project.size,
-      Files: project.fileCount,
-      "Last Updated": project.lastModified,
-    };
-    meta.textContent = Object.entries(metadata)
-      .filter(([key, value]) => !!value)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(" | ");
-    const buttonsDiv = document.createElement("div");
-    buttonsDiv.className = "project-buttons";
+//     const meta = document.createElement("div");
+//     meta.className = "project-meta";
+//     const metadata = {
+//       Size: project.size,
+//       Files: project.fileCount,
+//       "Last Updated": project.lastModified,
+//     };
+//     meta.textContent = Object.entries(metadata)
+//       .filter(([key, value]) => !!value)
+//       .map(([key, value]) => `${key}: ${value}`)
+//       .join(" | ");
+//     const buttonsDiv = document.createElement("div");
+//     buttonsDiv.className = "project-buttons";
 
-    const archiveBtn = document.createElement("button");
-    archiveBtn.textContent = "Archive";
-    archiveBtn.addEventListener("click", () =>
-      alert(`Archived ${project.title}`)
-    );
+//     const archiveBtn = document.createElement("button");
+//     archiveBtn.textContent = "Archive";
+//     archiveBtn.addEventListener("click", () =>
+//       alert(`Archived ${project.title}`)
+//     );
 
-    const shareBtn = document.createElement("button");
-    shareBtn.textContent = "Share";
-    shareBtn.addEventListener("click", () => alert(`Shared ${project.title}`));
+//     const shareBtn = document.createElement("button");
+//     shareBtn.textContent = "Share";
+//     shareBtn.addEventListener("click", () => alert(`Shared ${project.title}`));
 
-    const downloadBtn = document.createElement("button");
-    downloadBtn.textContent = "Download";
-    downloadBtn.addEventListener("click", () =>
-      alert(`Downloaded ${project.title}`)
-    );
+//     const downloadBtn = document.createElement("button");
+//     downloadBtn.textContent = "Download";
+//     downloadBtn.addEventListener("click", () =>
+//       alert(`Downloaded ${project.title}`)
+//     );
 
-    buttonsDiv.appendChild(archiveBtn);
-    buttonsDiv.appendChild(shareBtn);
-    buttonsDiv.appendChild(downloadBtn);
-    details.appendChild(title);
-    details.appendChild(meta);
-    projectDiv.appendChild(checkboxContainer);
-    projectDiv.appendChild(details);
-    projectDiv.appendChild(buttonsDiv);
+//     buttonsDiv.appendChild(archiveBtn);
+//     buttonsDiv.appendChild(shareBtn);
+//     buttonsDiv.appendChild(downloadBtn);
+//     details.appendChild(title);
+//     details.appendChild(meta);
+//     projectDiv.appendChild(checkboxContainer);
+//     projectDiv.appendChild(details);
+//     projectDiv.appendChild(buttonsDiv);
 
-    projectDiv.addEventListener("mousedown", (e) => {
-      canAClickEventOpenAProjectPane = true;
-      const timer = setTimeout(() => {
-        enableSelectableMode();
-        checkbox.click();
-        canAClickEventOpenAProjectPane = false;
-      }, 500);
+//     projectDiv.addEventListener("mousedown", (e) => {
+//       canAClickEventOpenAProjectPane = true;
+//       const timer = setTimeout(() => {
+//         enableSelectableMode();
+//         checkbox.click();
+//         canAClickEventOpenAProjectPane = false;
+//       }, 500);
 
-      projectDiv.addEventListener(
-        "mouseup",
-        () => {
-          clearTimeout(timer);
-        },
-        { once: true }
-      );
-    });
+//       projectDiv.addEventListener(
+//         "mouseup",
+//         () => {
+//           clearTimeout(timer);
+//         },
+//         { once: true }
+//       );
+//     });
 
-    title.addEventListener("click", (e) => {
-      if (canAClickEventOpenAProjectPane && e.target !== checkbox) {
-        openProjectPane(project);
-      }
-      canAClickEventOpenAProjectPane = true;
-    });
+//     title.addEventListener("click", (e) => {
+//       if (canAClickEventOpenAProjectPane && e.target !== checkbox) {
+//         openProjectPane(project);
+//       }
+//       canAClickEventOpenAProjectPane = true;
+//     });
 
-    projectList.appendChild(projectDiv);
-  });
-}
+//     projectList.appendChild(projectDiv);
+//   });
+// }
 
-async function openProjectPane(project) {
-  const paneOverlay = document.getElementById("pane-overlay");
-  const photoGrid = document.getElementById("photo-grid");
+// async function openProjectPane(project) {
+//   const paneOverlay = document.getElementById("pane-overlay");
+//   const photoGrid = document.getElementById("photo-grid");
 
-  paneOverlay.style.display = "flex";
-  photoGrid.innerHTML = "";
+//   paneOverlay.style.display = "flex";
+//   photoGrid.innerHTML = "";
 
-  const infoDiv = document.createElement("div");
-  infoDiv.innerHTML = `
-    <h2>${project.title}</h2>
-    <p>Size: ${project.size} | Files: ${project.fileCount}</p>
-    <p>Likes: <span id="likes-count">0</span> | Dislikes: <span id="dislikes-count">0</span></p>
-  `;
-  photoGrid.appendChild(infoDiv);
+//   const infoDiv = document.createElement("div");
+//   infoDiv.innerHTML = `
+//     <h2>${project.title}</h2>
+//     <p>Size: ${project.size} | Files: ${project.fileCount}</p>
+//     <p>Likes: <span id="likes-count">0</span> | Dislikes: <span id="dislikes-count">0</span></p>
+//   `;
+//   photoGrid.appendChild(infoDiv);
 
-  const photos = await fetchLowQualityImages(project.id);
-  let likes = 0;
-  let dislikes = 0;
+//   const photos = await fetchLowQualityImages(project.id);
+//   let likes = 0;
+//   let dislikes = 0;
 
-  photos.forEach((photo) => {
-    const photoDiv = document.createElement("div");
-    photoDiv.className = "photo";
+//   photos.forEach((photo) => {
+//     const photoDiv = document.createElement("div");
+//     photoDiv.className = "photo";
 
-    const img = document.createElement("img");
-    img.src = photo;
-    img.alt = project.title;
+//     const img = document.createElement("img");
+//     img.src = photo;
+//     img.alt = project.title;
 
-    const buttonsDiv = document.createElement("div");
-    buttonsDiv.className = "photo-buttons";
+//     const buttonsDiv = document.createElement("div");
+//     buttonsDiv.className = "photo-buttons";
 
-    const thumbsUpBtn = document.createElement("button");
-    thumbsUpBtn.textContent = "👍";
+//     const thumbsUpBtn = document.createElement("button");
+//     thumbsUpBtn.textContent = "👍";
 
-    const thumbsDownBtn = document.createElement("button");
-    thumbsDownBtn.textContent = "👎";
+//     const thumbsDownBtn = document.createElement("button");
+//     thumbsDownBtn.textContent = "👎";
 
-    thumbsUpBtn.addEventListener("click", () => {
-      if (!thumbsUpBtn.classList.contains("active")) {
-        likes++;
-        if (thumbsDownBtn.classList.contains("active")) dislikes--;
-      } else {
-        likes--;
-      }
-      thumbsUpBtn.classList.toggle("active");
-      thumbsDownBtn.classList.remove("active");
-      updateLikesDislikes();
-    });
+//     thumbsUpBtn.addEventListener("click", () => {
+//       if (!thumbsUpBtn.classList.contains("active")) {
+//         likes++;
+//         if (thumbsDownBtn.classList.contains("active")) dislikes--;
+//       } else {
+//         likes--;
+//       }
+//       thumbsUpBtn.classList.toggle("active");
+//       thumbsDownBtn.classList.remove("active");
+//       updateLikesDislikes();
+//     });
 
-    thumbsDownBtn.addEventListener("click", () => {
-      if (!thumbsDownBtn.classList.contains("active")) {
-        dislikes++;
-        if (thumbsUpBtn.classList.contains("active")) likes--;
-      } else {
-        dislikes--;
-      }
-      thumbsDownBtn.classList.toggle("active");
-      thumbsUpBtn.classList.remove("active");
-      updateLikesDislikes();
-    });
+//     thumbsDownBtn.addEventListener("click", () => {
+//       if (!thumbsDownBtn.classList.contains("active")) {
+//         dislikes++;
+//         if (thumbsUpBtn.classList.contains("active")) likes--;
+//       } else {
+//         dislikes--;
+//       }
+//       thumbsDownBtn.classList.toggle("active");
+//       thumbsUpBtn.classList.remove("active");
+//       updateLikesDislikes();
+//     });
 
-    buttonsDiv.appendChild(thumbsUpBtn);
-    buttonsDiv.appendChild(thumbsDownBtn);
-    photoDiv.appendChild(img);
-    photoDiv.appendChild(buttonsDiv);
-    photoGrid.appendChild(photoDiv);
-  });
+//     buttonsDiv.appendChild(thumbsUpBtn);
+//     buttonsDiv.appendChild(thumbsDownBtn);
+//     photoDiv.appendChild(img);
+//     photoDiv.appendChild(buttonsDiv);
+//     photoGrid.appendChild(photoDiv);
+//   });
 
-  function updateLikesDislikes() {
-    document.getElementById("likes-count").textContent = likes;
-    document.getElementById("dislikes-count").textContent = dislikes;
-  }
-}
+//   function updateLikesDislikes() {
+//     document.getElementById("likes-count").textContent = likes;
+//     document.getElementById("dislikes-count").textContent = dislikes;
+//   }
+// }
 
-function updateControls() {
-  const checkedBoxes = document.querySelectorAll(
-    '.project input[type="checkbox"]:checked'
-  );
-  const count = checkedBoxes.length;
-  document.getElementById("checked-count").textContent = `${count} Selected`;
-  const enabled = count > 0;
+// function updateControls() {
+//   const checkedBoxes = document.querySelectorAll(
+//     '.project input[type="checkbox"]:checked'
+//   );
+//   const count = checkedBoxes.length;
+//   document.getElementById("checked-count").textContent = `${count} Selected`;
+//   const enabled = count > 0;
 
-  document.getElementById("checked-count").hidden = !enabled;
-  document.getElementById("archive").disabled = !enabled;
-  document.getElementById("share").disabled = !enabled;
-  document.getElementById("download").disabled = !enabled;
+//   document.getElementById("checked-count").hidden = !enabled;
+//   document.getElementById("archive").disabled = !enabled;
+//   document.getElementById("share").disabled = !enabled;
+//   document.getElementById("download").disabled = !enabled;
 
-  if (count === 0) {
-    hideSelectableMode();
-  }
-}
+//   if (count === 0) {
+//     hideSelectableMode();
+//   }
+// }
 
-initializeUI();
+// initializeUI();
 
-document.getElementById("pane-overlay").addEventListener("click", (e) => {
-  if (e.target.id === "pane-overlay") {
-    e.target.style.display = "none";
-  }
-});
+// document.getElementById("pane-overlay").addEventListener("click", (e) => {
+//   if (e.target.id === "pane-overlay") {
+//     e.target.style.display = "none";
+//   }
+// });
 
-document.getElementById("pane-close")?.remove();
+// document.getElementById("pane-close")?.remove();
 
-searchInput.addEventListener("input", handleSearch);
-clearBtn.addEventListener("click", () => {
-  searchInput.value = "";
-  handleSearch();
-});
+// searchInput.addEventListener("input", handleSearch);
+// clearBtn.addEventListener("click", () => {
+//   searchInput.value = "";
+//   handleSearch();
+// });
 
-archiveBtn.addEventListener("click", () => alert("Archive selected items"));
-shareBtn.addEventListener("click", () => alert("Share selected items"));
-downloadBtn.addEventListener("click", () => alert("Download selected items"));
+// archiveBtn.addEventListener("click", () => alert("Archive selected items"));
+// shareBtn.addEventListener("click", () => alert("Share selected items"));
+// downloadBtn.addEventListener("click", () => alert("Download selected items"));
 
-renderProjects();
+// renderProjects();

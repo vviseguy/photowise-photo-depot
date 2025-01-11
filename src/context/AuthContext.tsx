@@ -4,7 +4,7 @@ import { decodeJWT } from "aws-amplify/auth";
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { parseHash } from '../utils/parseHash';
 import ProjectService from "../services/projectService";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   sub: string;
@@ -34,11 +34,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     () => localStorage.getItem('idToken')
   );
 
-  const [from, setFrom] = useState<string>("/")
 
-  const location = useLocation()
   const navigate = useNavigate();
-  const redirectUrl = "/redirect"; // Ensure no query params
+  const redirectPath = "/photowise-photo-depot/redirect"; // Ensure no query params
 
 
   const decodedIDToken = idToken ? decodeJWT(idToken).payload : null;
@@ -74,11 +72,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Function to handle token extraction from URL
   const handleRedirect = () => {
-    // Remove tokens from URL
-    if (location.pathname == redirectUrl)
-      navigate(from)
-    else
-      console.log("no redirect")
 
     const hash = window.location.hash;
     if (hash) {
@@ -88,27 +81,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login(tokens.access_token, tokens.id_token);
       }
 
-      if (tokens.expires_in) {
-        // Calculate time until token expiry
-        const decoded = tokens.id_token ? decodeJWT(tokens.id_token).payload : null;
-        const currentTime = Math.floor(Date.now() / 1000);
-        const timeUntilExpiry = decoded?.exp ? decoded.exp - currentTime : NaN;
+      // if (tokens.expires_in) {
+      //   // Calculate time until token expiry
+      //   const decoded = tokens.id_token ? decodeJWT(tokens.id_token).payload : null;
+      //   const currentTime = Math.floor(Date.now() / 1000);
+      //   const timeUntilExpiry = decoded?.exp ? decoded.exp - currentTime : NaN;
 
-        if (timeUntilExpiry > 300) {
-          const timeout = setTimeout(() => {
-            refreshAccessToken();
-          }, (timeUntilExpiry - 300) * 1000);
+      //   if (timeUntilExpiry > 300) {
+      //     const timeout = setTimeout(() => {
+      //       refreshAccessToken();
+      //     }, (timeUntilExpiry - 300) * 1000);
 
-          return () => clearTimeout(timeout);
-        } else {
-          refreshAccessToken();
-        }
-      }
+      //     return () => clearTimeout(timeout);
+      //   } else {
+      //     refreshAccessToken();
+      //   }
+      // }
+
 
 
       window.history.replaceState(null, "");
     }
     
+    // Remove tokens from URL
+    const from = localStorage.getItem("from")??"/"
+    if (window.location.pathname == redirectPath){
+      console.log(from)
+      navigate(from)
+    }
+    else
+      console.log(location.pathname)
   };
 
   useEffect(() => {
@@ -172,9 +174,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const initLogin = () => {
-    setFrom(location.pathname)
-    console.log(location.pathname)
-    
+    localStorage.setItem("from",window.location.pathname)
+    const redirectUrl = window.location.origin +  redirectPath
 
     const loginUrl = `https://us-west-2b2hpjjqgl.auth.us-west-2.amazoncognito.com/login?client_id=59e3vejubvjscpv0vlkkrp1orq&redirect_uri=${encodeURIComponent(
       redirectUrl
@@ -186,8 +187,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setAccessToken(null);
     setIdToken(null);
-    // Optionally, redirect to a logout endpoint or home page
-    window.location.href = '/';
   };
 
   return (

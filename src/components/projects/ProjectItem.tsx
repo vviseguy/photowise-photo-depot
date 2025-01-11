@@ -1,5 +1,5 @@
 // ProjectItem.tsx
-import React, { useRef } from 'react';
+import React from 'react';
 import { ProjectPane } from './ProjectPane';
 import { usePane } from '../../context/PaneContext';
 import { ArchiveButton } from './button/ArchiveButton';
@@ -25,31 +25,31 @@ export const ProjectItem: React.FC<ProjectItemProps> = ({
   onEnableMultiSelect,
 }) => {
   const { openPane } = usePane();
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const longPressFired = useRef(false);
+  let longPressTimer: number | null=null;
+  let longPressFired = false;
 
   // Trigger multi-select on long press
-  const handleMouseDown = () => {
-    longPressFired.current = false;
-    longPressTimer.current = setTimeout(() => {
-      longPressFired.current = true;
-      onEnableMultiSelect(project.id);
-    }, 500);
-  };
+ const handleMouseDown = () => {
+  longPressFired = false;
+  longPressTimer = window.setTimeout(() => {
+    longPressFired = true;
+    onEnableMultiSelect(project.id);
+  }, 500);
+};
 
-  // Normal click: either toggle selection (multi-select) or open project (single-select)
-  const handleMouseUp = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
+const handleMouseUp = () => {
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+  }
+  if (!longPressFired) {
+    if (isMultiSelectEnabled) {
+      onSelectChange(project.id, !isSelected);
+    } else {
+      openPane(<ProjectPane project={project} />);
     }
-    if (!longPressFired.current) {
-      if (isMultiSelectEnabled) {
-        onSelectChange(project.id, !isSelected);
-      } else {
-        openPane(<ProjectPane project={project} />);
-      }
-    }
-  };
+  }
+};
+
 
   return (
     <div
