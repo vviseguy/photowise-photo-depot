@@ -4,6 +4,7 @@ import { decodeJWT } from "aws-amplify/auth";
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { parseHash } from '../utils/parseHash';
 import ProjectService from "../services/projectService";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface User {
   sub: string;
@@ -34,7 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   const [from, setFrom] = useState<string>("/")
-  const redirectUrl = window.location.origin + "/photowise-photo-depot/redirect"; // Ensure no query params
+
+  const location = useLocation()
+  const navigate = useNavigate();
+  const redirectUrl = "/redirect"; // Ensure no query params
 
 
   const decodedIDToken = idToken ? decodeJWT(idToken).payload : null;
@@ -71,8 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Function to handle token extraction from URL
   const handleRedirect = () => {
     // Remove tokens from URL
-    if (window.location.origin + window.location.pathname === redirectUrl)
-      window.location.href=from
+    if (location.pathname == redirectUrl)
+      navigate(from)
     else
       console.log("no redirect")
 
@@ -168,8 +172,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const initLogin = () => {
-    setFrom(window.location.pathname)
-    console.log(window.location.pathname)
+    setFrom(location.pathname)
+    console.log(location.pathname)
     
 
     const loginUrl = `https://us-west-2b2hpjjqgl.auth.us-west-2.amazoncognito.com/login?client_id=59e3vejubvjscpv0vlkkrp1orq&redirect_uri=${encodeURIComponent(

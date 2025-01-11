@@ -21,8 +21,7 @@ const App: React.FC = () => {
     <>
       <div className="setting">
         {/* <Toaster/> */}
-        <BrowserRouter>
-          <SearchProvider>
+        
             {/* Always show Header */}
             <Header onLogin={initLogin} onLogout={logout} showSearch={true} email={user?.email} />
             <div className="app-container">
@@ -42,8 +41,6 @@ const App: React.FC = () => {
               </Routes>
             </div>
             <Footer />
-          </SearchProvider>
-        </BrowserRouter>
 
         <PaneDisplay />
       </div>
