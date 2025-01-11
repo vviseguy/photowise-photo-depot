@@ -1,0 +1,50 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  
+  max-width: min(1280px, 100vw);
+  overflow-x: hidden;
+
+}
+
+a {
+  font-weight: 500;
+  color: var(--action-primary);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--action-primary-hover);
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+
+}

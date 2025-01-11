@@ -1,35 +1,17 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Manager</title>
-    <link rel="stylesheet" href="styles/styles.css" />
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Photowise Photography</title>
   </head>
   <body>
-    <header>
-      <span id="checked-count" hidden>0 Selected</span>
-      <div class="search-container">
-        <input type="text" id="search" placeholder="Search projects..." />
-        <button class="clear-btn" id="clear-btn">&times;</button>
-      </div>
-      <button id="archive" disabled style="display: none;">Archive Selected</button>
-      <button id="share" disabled>Share Selected</button>
-      <button id="download" disabled>Download Selected</button>
-    </header>
-    <div class="project-list" id="project-list"></div>
-
-    <div class="pane-overlay" id="pane-overlay">
-      <div class="pane" id="pane">
-        <div class="photo-grid" id="photo-grid"></div>
-      </div>
-    </div>
-
-    <!-- Ensure app.js runs within the module context -->
-    <script type="module">
-      import "./scripts/app.js";
-    </script>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

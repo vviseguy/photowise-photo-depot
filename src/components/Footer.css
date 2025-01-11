@@ -1,0 +1,29 @@
+/* Footer.css */
+.footer {
+  background-color: var(--neutral-900);
+  color: var(--text-inverse);
+  padding: 20px 17vw;
+  text-align: center;
+  /* position:sticky;
+  bottom: 0; */
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 14px;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-link {
+  color: #61dafb;
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}

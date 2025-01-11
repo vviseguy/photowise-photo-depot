@@ -1,0 +1,132 @@
+// // projectData.js
+
+
+// import { getAccessToken } from "./auth/auth.js";
+
+// const dummyData = {
+//   metadata: [
+//     {
+//       title: "Project Alpha",
+//       size: "20 MB",
+//       files: 10,
+//       lastAccessed: "2024-12-20",
+//     },
+//     {
+//       title: "Project Beta",
+//       size: "15 MB",
+//       files: 8,
+//       lastAccessed: "2024-12-18",
+//     },
+//     {
+//       title: "Project Gamma",
+//       size: "50 MB",
+//       files: 25,
+//       lastAccessed: "2024-12-15",
+//     },
+//   ],
+//   photos: {
+//     "Project Alpha": Array.from(
+//       { length: 20 },
+//       (_, i) => `https://picsum.photos/150?project=1&random=${i}`
+//     ),
+//     "Project Beta": Array.from(
+//       { length: 15 },
+//       (_, i) => `https://picsum.photos/150?project=2&random=${i}`
+//     ),
+//     "Project Gamma": Array.from(
+//       { length: 25 },
+//       (_, i) => `https://picsum.photos/150?project=3&random=${i}`
+//     ),
+//   },
+// };
+
+// // services/ProjectService.ts
+// import { getToken } from "./auth/tokenManager";
+
+// export interface ProjectMetadata {
+//   id: number;
+//   title: string;
+//   size: string;
+//   fileCount: number;
+//   lastModified: string;
+//   shootDate?: string;
+// }
+
+// export class ProjectService {
+//   private metadataCache: ProjectMetadata[] | null = null;
+//   private photoCache: Record<string, string[]> = {};
+//   private readonly apiEndpoint = "https://f6937s1abf.execute-api.us-west-2.amazonaws.com/default/getMetadata";
+
+//   // Fetch project metadata from the server or cache
+//   public async fetchMetadata(): Promise<ProjectMetadata[]> {
+//     if (this.metadataCache) {
+//       console.log("Using cached metadata.");
+//       return this.metadataCache;
+//     }
+
+//     const token = getToken();
+//     if (!token) {
+//       throw new Error("No access token available. Please log in.");
+//     }
+
+//     try {
+//       console.log("Fetching metadata from server...");
+//       const response = await fetch(this.apiEndpoint, {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//       const data = await response.json();
+//       this.metadataCache = this.adaptRawData(data.items);
+//       return this.metadataCache;
+//     } catch (err) {
+//       console.error("Failed to fetch metadata:", err);
+//       throw new Error("Failed to fetch metadata.");
+//     }
+//   }
+
+//   // Fetch low-quality images for a project
+//   public async fetchLowQualityImages(projectId: string): Promise<string[]> {
+//     if (this.photoCache[projectId]) {
+//       console.log(`Using cached photos for project ${projectId}.`);
+//       return this.photoCache[projectId];
+//     }
+
+//     try {
+//       console.log(`Fetching photos for project ${projectId} from server...`);
+//       // Replace the below with actual server call when available
+//       this.photoCache[projectId] = Array.from(
+//         { length: 10 }, // Dummy length, replace with actual logic
+//         (_, i) => `https://picsum.photos/150?project=${projectId}&random=${i}`
+//       );
+//       return this.photoCache[projectId];
+//     } catch (err) {
+//       console.error(`Failed to fetch photos for project ${projectId}:`, err);
+//       throw new Error("Failed to fetch project photos.");
+//     }
+//   }
+
+//   // Adapt raw data into usable format
+//   private adaptRawData(rawDataArray: any[]): ProjectMetadata[] {
+//     return rawDataArray.map((data, index) => ({
+//       id: index,
+//       title: data.title,
+//       size: this.formatSize(data.bytes),
+//       fileCount: data.fileCount,
+//       lastModified: new Date(data.lastModified).toISOString(),
+//       shootDate: data.shootDate ? new Date(data.shootDate).toISOString() : undefined,
+//     }));
+//   }
+
+//   // Utility function to format size in human-readable format
+//   private formatSize(bytes: number): string {
+//     const units = ["B", "KB", "MB", "GB", "TB"];
+//     let i = 0;
+//     while (bytes >= 1024 && i < units.length - 1) {
+//       bytes /= 1024;
+//       i++;
+//     }
+//     return `${bytes.toFixed(2)} ${units[i]}`;
+//   }
+// }

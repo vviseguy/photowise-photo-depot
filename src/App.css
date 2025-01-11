@@ -1,0 +1,24 @@
+.setting{
+  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.app-container {
+  position: relative;
+  margin: 0 0;
+  padding: 0 17vw;
+  text-align: center;
+  height: auto;
+  box-sizing: border-box;
+  flex: 1;
+}
+.app-scroll {
+  margin: 0 0;
+  padding: 0 17vw;
+  text-align: center;
+  height: auto;
+  box-sizing: border-box;
+  flex: 1;
+  /* overflow-y: scroll; */
+}

@@ -1,0 +1,69 @@
+.project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--text-secondary);
+    padding: 0.5rem 1rem;
+    gap:1rem
+  }
+
+  .project-item:first-child {
+    margin-top: 20px; /* Adds extra margin */
+  }
+
+  .project-item:last-child {
+    border-bottom: none; /* Removes the top border */
+    margin-bottom: min(100px,30vh); /* Adds extra margin */
+  }
+  
+  /* Left area: title + meta text */
+  .project-title-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-align: left;
+  }
+  
+  /* Large, left-aligned title */
+  .project-title-large {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    cursor: pointer;
+    width:fit-content;
+  }
+  
+  /* Lighter, smaller meta text below the title */
+  .project-meta {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    width:fit-content;
+  }
+  
+  /* The checkbox (shown only if multi-select is active) */
+  .select-checkbox {
+    accent-color: var(--action-primary);
+    color:var(--text-inverse);
+    margin: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+  }
+  input[type="checkbox"]:checked::after {
+    content: "✓"; /* The check symbol */
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: green; /* Change this to your desired check color */
+  }
+  
+  /* Right area: action buttons (only if NOT in multi-select) */
+  .project-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  

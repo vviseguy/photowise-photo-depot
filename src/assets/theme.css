@@ -1,0 +1,68 @@
+/* colors.css */
+:root {
+    /* Core Colors */
+    --primary-color: #3498db; /* Blue */
+    --secondary-color: #2ecc71; /* Green */
+    --tertiary-color: #f39c12; /* Orange */
+  
+    /* Neutral Colors */
+    --neutral-100: #ffffff; /* White */
+    --neutral-200: #f4f4f4; /* Light gray */
+    --neutral-300: #dddddd; /* light medium */
+    --neutral-500: #b2b2b2; /* Medium gray */
+    --neutral-800: #616161; /* Dark gray */
+    --neutral-900: #333333; /* Almost black */
+  
+    /* Background Colors */
+    --background-color: var(--neutral-100);
+    --surface-color: var(--neutral-300);
+    --overlay-color: rgba(255,255,255, 0.5); /* Semi-transparent black */
+  
+    /* Text Colors */
+    --text-primary: var(--neutral-900);
+    --text-secondary: var(--neutral-500);
+    --text-inverse: var(--neutral-100);
+  
+    /* Interactive/Action Colors */
+    --action-primary: var(--primary-color);
+    --action-secondary: var(--secondary-color);
+    --action-primary-hover: #2980b9; /* Darker blue for hover */
+    --action-secondary-hover: #28ad60;
+  
+    /* Status/Feedback Colors */
+    --success-color: #27ae60; /* Success green */
+    --error-color: #e74c3c; /* Error red */
+    --warning-color: #f39c12; /* Warning orange */
+    --info-color: #3498db; /* Info blue */
+  
+    /* Focus and Borders */
+    --focus-color: #9b59b6; /* Purple for focus outlines */
+    --border-color: var(--neutral-500);
+    --border-hover-color: var(--neutral-900);
+  
+    /* Shadows */
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-light: 0px 2px 4px var(--shadow-color);
+    --shadow-dark: 0px 4px 8px var(--shadow-color);
+  
+    /* States */
+    --disabled-color: var(--neutral-500);
+    --highlight-color: #f1c40f; /* Yellow for highlights */
+  
+    /* Gradients */
+    --gradient-primary: linear-gradient(45deg, #3498db, #2980b9);
+    --gradient-secondary: linear-gradient(45deg, #2ecc71, #27ae60);
+  }
+  
+  /* Optional: Dark Theme */
+  [data-theme="dark"] {
+    --primary-color: #1abc9c; /* Teal */
+    --secondary-color: #16a085; /* Dark teal */
+    --background-color: #222; /* Dark background */
+    --surface-color: #333; /* Darker cards */
+    --text-primary: #ddd; /* Light text */
+    --text-secondary: #aaa; /* Subdued light text */
+    --border-color: #444; /* Dark borders */
+    --action-primary-hover: #0e6655; /* Darker teal for hover */
+  }
+  

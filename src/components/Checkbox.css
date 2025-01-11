@@ -1,0 +1,24 @@
+  
+  .checkbox-box {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--surface-color);
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .checkbox-box.checkbox-checked {
+    background-color: var(--action-primary);
+  }
+  
+  .checkbox-icon {
+    color: var(--text-inverse);
+  }
+  

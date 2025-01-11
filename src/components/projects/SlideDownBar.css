@@ -1,0 +1,33 @@
+/* SlideDownBar.css */
+.slide-down-container {
+    position: sticky; 
+    top:0px;
+    z-index: 10; /* So it stays above other elements */
+    align-items: center;
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+    width:100%;
+    height:0px; 
+    transition: height 0.3s ease;
+  }
+  .slide-down-container.show{
+    height: 51.19px;
+  }
+  .slide-down-container .selected-count{
+    margin-right:auto;
+  }
+  .slide-down-bar {
+    z-index: 10;
+    position: absolute; 
+    bottom: 0px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface-color);
+    margin: 0 -50vw;
+    border-left: 50vw solid transparent;
+    border-right: 50vw solid transparent;
+    width: calc(100% - 2rem);
+    padding: 0.5rem 1rem;
+  }
