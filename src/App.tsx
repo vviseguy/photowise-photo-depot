@@ -30,7 +30,6 @@ const App: React.FC = () => {
                 {/* Catch-all / Default route / Login redirect*/}
 
                 <Route path="/redirect" element={<div>Redirecing...</div>} />
-                <Route path="/photowise-photo-depot/redirect" element={<div>Redirecing...</div>} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>

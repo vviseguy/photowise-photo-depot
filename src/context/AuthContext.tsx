@@ -36,17 +36,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
   const navigate = useNavigate();
-  const redirectPath = "/photowise-photo-depot/redirect"; // Ensure no query params
+  const redirectPath = "/redirect"; // Ensure no query params
 
 
   const decodedIDToken = idToken ? decodeJWT(idToken).payload : null;
   const user: User | null = decodedIDToken
     ? {
-        sub: decodedIDToken.sub ?? "not provided",
-        email: decodedIDToken.email as string,
-        name: decodedIDToken.name as string,
-        // Extract other fields as needed
-      }
+      sub: decodedIDToken.sub ?? "not provided",
+      email: decodedIDToken.email as string,
+      name: decodedIDToken.name as string,
+      // Extract other fields as needed
+    }
     : null;
 
   const isAuthenticated = !!accessToken;
@@ -68,10 +68,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       localStorage.removeItem('idToken');
     }
-  }, [accessToken, idToken, projectService]);
+  }, [accessToken, idToken]);
 
   // Function to handle token extraction from URL
   const handleRedirect = () => {
+
+
 
     const hash = window.location.hash;
     if (hash) {
@@ -79,38 +81,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (tokens.access_token && tokens.id_token) {
         login(tokens.access_token, tokens.id_token);
+      }     
+
+      const from = localStorage.getItem("from") ?? "/"
+      if (window.location.pathname == redirectPath) {
+        navigate(from)
+      }
+  
+      if (tokens.expires_in) {
+        // Calculate time until token expiry
+        const decoded = tokens.id_token ? decodeJWT(tokens.id_token).payload : null;
+        const currentTime = Math.floor(Date.now() / 1000);
+        
+        const timeUntilExpiry = decoded?.exp ? decoded.exp - currentTime : NaN;
+
+        console.log(timeUntilExpiry)
+        if (timeUntilExpiry > 300) {
+          const timeout = setTimeout(() => {
+            refreshAccessToken();
+          }, (timeUntilExpiry - 300) * 1000);
+
+          return () => clearTimeout(timeout);
+        } else {
+          refreshAccessToken();
+        }
       }
 
-      // if (tokens.expires_in) {
-      //   // Calculate time until token expiry
-      //   const decoded = tokens.id_token ? decodeJWT(tokens.id_token).payload : null;
-      //   const currentTime = Math.floor(Date.now() / 1000);
-      //   const timeUntilExpiry = decoded?.exp ? decoded.exp - currentTime : NaN;
 
-      //   if (timeUntilExpiry > 300) {
-      //     const timeout = setTimeout(() => {
-      //       refreshAccessToken();
-      //     }, (timeUntilExpiry - 300) * 1000);
-
-      //     return () => clearTimeout(timeout);
-      //   } else {
-      //     refreshAccessToken();
-      //   }
-      // }
-
-
-
-      window.history.replaceState(null, "");
     }
-    
-    // Remove tokens from URL
-    const from = localStorage.getItem("from")??"/"
-    if (window.location.pathname == redirectPath){
-      console.log(from)
-      navigate(from)
-    }
-    else
-      console.log(location.pathname)
+
+
   };
 
   useEffect(() => {
@@ -123,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const decoded = decodeJWT(idToken).payload;
     const currentTime = Math.floor(Date.now() / 1000);
-    const timeUntilExpiry = (decoded.exp??0) - currentTime;
+    const timeUntilExpiry = (decoded.exp ?? 0) - currentTime;
 
     if (timeUntilExpiry > 300) {
       // Set a timeout to refresh the token 5 minutes before it expires
@@ -174,12 +174,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const initLogin = () => {
-    localStorage.setItem("from",window.location.pathname)
-    const redirectUrl = window.location.origin +  redirectPath
+    localStorage.setItem("from", window.location.pathname)
+    const redirectUrl = window.location.origin + redirectPath
 
     const loginUrl = `https://us-west-2b2hpjjqgl.auth.us-west-2.amazoncognito.com/login?client_id=59e3vejubvjscpv0vlkkrp1orq&redirect_uri=${encodeURIComponent(
       redirectUrl
-    )}&response_type=token&scope=email+openid`; // Added 'profile' scope
+    )}&response_type=token&scope=email+openid`;
 
     window.location.href = loginUrl;
   };
